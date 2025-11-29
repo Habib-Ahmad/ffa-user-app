@@ -1,60 +1,71 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { FolderOpen, FileText, MessageSquare } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-4 py-12">
-        <div className="flex justify-center">
-          <Sparkles className="h-16 w-16 text-primary" />
-        </div>
-        <h1 className="text-4xl font-bold">{t("home.welcome")}</h1>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          {t("home.description")}
-        </p>
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold">
+          {t("home.welcome")}, {user?.firstName}!
+        </h1>
+        <p className="text-muted-foreground text-lg">{t("home.description")}</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card
+          className="cursor-pointer hover:border-primary transition-colors"
+          onClick={() => navigate("/projects")}
+        >
           <CardHeader>
-            <CardTitle>{t("home.feature1.title")}</CardTitle>
+            <FolderOpen className="h-8 w-8 text-primary mb-2" />
+            <CardTitle>Browse Projects</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              {t("home.feature1.description")}
+              Explore available funding opportunities and find projects that
+              match your interests.
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card
+          className="cursor-pointer hover:border-primary transition-colors"
+          onClick={() => navigate("/applications")}
+        >
           <CardHeader>
-            <CardTitle>{t("home.feature2.title")}</CardTitle>
+            <FileText className="h-8 w-8 text-primary mb-2" />
+            <CardTitle>My Applications</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              {t("home.feature2.description")}
+              View and manage your submitted applications and track their
+              status.
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card
+          className="cursor-pointer hover:border-primary transition-colors"
+          onClick={() => navigate("/messages")}
+        >
           <CardHeader>
-            <CardTitle>{t("home.feature3.title")}</CardTitle>
+            <MessageSquare className="h-8 w-8 text-primary mb-2" />
+            <CardTitle>Messages</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              {t("home.feature3.description")}
+              Check your messages and notifications about your applications.
             </p>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="flex justify-center pt-6">
-        <Button size="lg">{t("home.getStarted")}</Button>
       </div>
     </div>
   );

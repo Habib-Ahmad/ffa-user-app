@@ -8,6 +8,10 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import Home from "./pages/Home";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import Applications from "./pages/Applications";
+import Messages from "./pages/Messages";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 
@@ -47,6 +51,46 @@ const AppRoutes = () => (
         <ProtectedRoute>
           <AppLayout>
             <Home />
+          </AppLayout>
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/projects"
+      element={
+        <ProtectedRoute>
+          <AppLayout>
+            <Projects />
+          </AppLayout>
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/projects/:id"
+      element={
+        <ProtectedRoute>
+          <AppLayout>
+            <ProjectDetail />
+          </AppLayout>
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/applications"
+      element={
+        <ProtectedRoute>
+          <AppLayout>
+            <Applications />
+          </AppLayout>
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/messages"
+      element={
+        <ProtectedRoute>
+          <AppLayout>
+            <Messages />
           </AppLayout>
         </ProtectedRoute>
       }

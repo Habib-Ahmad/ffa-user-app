@@ -1,7 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
-import { Home, FileText, Settings } from "lucide-react";
+import { Home, FolderOpen, FileText, MessageSquare } from "lucide-react";
 
 interface SidebarProps {
   className?: string;
@@ -12,8 +12,19 @@ export function Sidebar({ className }: SidebarProps) {
 
   const links = [
     { to: "/", icon: Home, label: t("nav.home"), end: true },
-    { to: "/docs", icon: FileText, label: t("nav.docs"), end: false },
-    { to: "/settings", icon: Settings, label: t("nav.settings"), end: false },
+    { to: "/projects", icon: FolderOpen, label: t("nav.projects"), end: false },
+    {
+      to: "/applications",
+      icon: FileText,
+      label: t("nav.myApplications"),
+      end: false,
+    },
+    {
+      to: "/messages",
+      icon: MessageSquare,
+      label: t("nav.messages"),
+      end: false,
+    },
   ];
 
   return (
@@ -38,13 +49,6 @@ export function Sidebar({ className }: SidebarProps) {
           </NavLink>
         ))}
       </nav>
-
-      <div className="p-4 border-t">
-        <div className="rounded-lg bg-muted p-3 text-xs">
-          <p className="font-medium mb-1">Foundation Template</p>
-          <p className="text-muted-foreground">Build your app here</p>
-        </div>
-      </div>
     </aside>
   );
 }

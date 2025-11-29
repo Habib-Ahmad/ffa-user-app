@@ -18,3 +18,18 @@ export interface User {
   organizationId?: number;
   organizationType?: string;
 }
+
+export interface Location {
+  id: number;
+  name: string;
+  postalCode: number;
+  departmentId: number;
+  creationDate: string;
+  lastModificationDate: string;
+  creatorUser: unknown | null;
+  lastModificatorUser: unknown | null;
+  isDeleted: boolean;
+  department: string | null;
+  embassies: unknown[] | null;
+  institutions: unknown[] | null;
+}

@@ -56,7 +56,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
 
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded bg-gradient-to-br from-primary to-primary/80" />
-          <span className="font-semibold text-lg">App Foundation</span>
+          <span className="font-semibold text-lg">FFA User Portal</span>
         </div>
 
         <div className="flex-1" />
