@@ -1,0 +1,413 @@
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { Eye, EyeOff, Globe, Check, X } from "lucide-react";
+import { toast } from "sonner";
+import { authApi } from "@/api/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
+import type { Institution } from "@/interfaces";
+
+const registerSchema = Yup.object({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string()
+    .email("Please enter a valid email")
+    .required("Email is required"),
+  login: Yup.string()
+    .min(3, "Username must be at least 3 characters")
+    .required("Username is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[0-9]/, "Password must contain at least one number")
+    .matches(
+      /[@$!%*?&#]/,
+      "Password must contain at least one special character"
+    )
+    .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required("Please confirm your password"),
+  organizationId: Yup.number()
+    .positive("Please select an organization")
+    .required("Organization is required"),
+});
+
+interface PasswordRequirement {
+  label: string;
+  validator: (password: string) => boolean;
+}
+
+const passwordRequirements: PasswordRequirement[] = [
+  { label: "At least 8 characters", validator: (p) => p.length >= 8 },
+  { label: "One lowercase letter", validator: (p) => /[a-z]/.test(p) },
+  { label: "One uppercase letter", validator: (p) => /[A-Z]/.test(p) },
+  { label: "One number", validator: (p) => /[0-9]/.test(p) },
+  { label: "One special character", validator: (p) => /[@$!%*?&#]/.test(p) },
+];
+
+export default function Register() {
+  const navigate = useNavigate();
+  const { t, language, setLanguage } = useLanguage();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [institutions, setInstitutions] = useState<Institution[]>([]);
+  const [password, setPassword] = useState("");
+
+  const toggleLanguage = () => {
+    setLanguage(language === "en" ? "fr" : "en");
+  };
+
+  useEffect(() => {
+    const loadInstitutions = async () => {
+      try {
+        const data = await authApi.getInstitutions();
+        setInstitutions(data);
+      } catch (error) {
+        toast.error("Failed to load institutions");
+      }
+    };
+    loadInstitutions();
+  }, []);
+
+  const handleSubmit = async (values: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    login: string;
+    password: string;
+    confirmPassword: string;
+    organizationId: number;
+  }) => {
+    setIsLoading(true);
+    try {
+      const { confirmPassword, ...registerData } = values;
+      await authApi.register(registerData);
+
+      toast.success(
+        t("auth.registrationSuccess") ||
+          "Registration successful! You can now log in."
+      );
+      navigate("/login");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Registration failed";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
+      <div className="absolute top-4 right-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={toggleLanguage}
+          className="gap-2"
+        >
+          <Globe className="h-4 w-4" />
+          {language.toUpperCase()}
+        </Button>
+      </div>
+
+      <Card className="w-full max-w-2xl my-8">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">
+            {t("auth.createAccount") || "Create Account"}
+          </CardTitle>
+          <CardDescription className="text-center">
+            {t("auth.registerDescription") ||
+              "Fill in the information below to create your account"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Formik
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              email: "",
+              login: "",
+              password: "",
+              confirmPassword: "",
+              organizationId: 0,
+            }}
+            validationSchema={registerSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ errors, touched, setFieldValue, values }) => (
+              <Form className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">
+                      {t("auth.firstName") || "First Name"}
+                    </Label>
+                    <Field
+                      as={Input}
+                      id="firstName"
+                      name="firstName"
+                      placeholder="John"
+                      className={
+                        errors.firstName && touched.firstName
+                          ? "border-red-500"
+                          : ""
+                      }
+                    />
+                    <ErrorMessage
+                      name="firstName"
+                      component="p"
+                      className="text-sm text-red-500"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">
+                      {t("auth.lastName") || "Last Name"}
+                    </Label>
+                    <Field
+                      as={Input}
+                      id="lastName"
+                      name="lastName"
+                      placeholder="Doe"
+                      className={
+                        errors.lastName && touched.lastName
+                          ? "border-red-500"
+                          : ""
+                      }
+                    />
+                    <ErrorMessage
+                      name="lastName"
+                      component="p"
+                      className="text-sm text-red-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">{t("auth.email") || "Email"}</Label>
+                  <Field
+                    as={Input}
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="john.doe@example.com"
+                    className={
+                      errors.email && touched.email ? "border-red-500" : ""
+                    }
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="login">
+                    {t("auth.username") || "Username"}
+                  </Label>
+                  <Field
+                    as={Input}
+                    id="login"
+                    name="login"
+                    placeholder="johndoe"
+                    className={
+                      errors.login && touched.login ? "border-red-500" : ""
+                    }
+                  />
+                  <ErrorMessage
+                    name="login"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="organizationId">
+                    {t("auth.organization") || "Organization"}
+                  </Label>
+                  <Select
+                    onValueChange={(value) =>
+                      setFieldValue("organizationId", parseInt(value))
+                    }
+                  >
+                    <SelectTrigger
+                      className={
+                        errors.organizationId && touched.organizationId
+                          ? "border-red-500"
+                          : ""
+                      }
+                    >
+                      <SelectValue
+                        placeholder={
+                          t("auth.selectOrganization") ||
+                          "Select an organization"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {institutions.map((institution) => (
+                        <SelectItem
+                          key={institution.id}
+                          value={institution.id.toString()}
+                        >
+                          {institution.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <ErrorMessage
+                    name="organizationId"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">
+                    {t("auth.password") || "Password"}
+                  </Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      className={
+                        errors.password && touched.password
+                          ? "border-red-500 pr-10"
+                          : "pr-10"
+                      }
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setFieldValue("password", e.target.value);
+                        setPassword(e.target.value);
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Password Requirements */}
+                  <div className="mt-2 space-y-1">
+                    {passwordRequirements.map((req, index) => {
+                      const isValid = req.validator(password);
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 text-xs"
+                        >
+                          {isValid ? (
+                            <Check className="h-3 w-3 text-green-500" />
+                          ) : (
+                            <X className="h-3 w-3 text-gray-400" />
+                          )}
+                          <span
+                            className={
+                              isValid ? "text-green-600" : "text-gray-500"
+                            }
+                          >
+                            {req.label}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <ErrorMessage
+                    name="password"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">
+                    {t("auth.confirmPassword") || "Confirm Password"}
+                  </Label>
+                  <div className="relative">
+                    <Field
+                      as={Input}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      className={
+                        errors.confirmPassword && touched.confirmPassword
+                          ? "border-red-500 pr-10"
+                          : "pr-10"
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <ErrorMessage
+                    name="confirmPassword"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading
+                    ? t("common.loading") || "Loading..."
+                    : t("auth.register") || "Register"}
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-2">
+          <div className="text-sm text-center text-gray-600">
+            {t("auth.haveAccount") || "Already have an account?"}{" "}
+            <Link to="/login" className="text-blue-600 hover:underline">
+              {t("auth.login") || "Login"}
+            </Link>
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+}

@@ -14,5 +14,12 @@ export const API_URLS = {
 
   PUBLIC: {
     INSTITUTIONS: "/public/institutions",
+    PROJECTS: "/public/projects",
+    PROJECT: (id: number) => `/public/projects/${id}`,
+  },
+
+  APPLICANT: {
+    APPLICATIONS: "/applicant/applications",
+    APPLICATION: (id: number) => `/applicant/applications/${id}`,
   },
 } as const;
