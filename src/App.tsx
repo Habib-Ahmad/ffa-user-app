@@ -10,7 +10,9 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
+import ApplyToProject from "./pages/ApplyToProject";
 import Applications from "./pages/Applications";
+import ApplicationDetail from "./pages/ApplicationDetail";
 import Messages from "./pages/Messages";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -76,11 +78,31 @@ const AppRoutes = () => (
       }
     />
     <Route
+      path="/apply/:id"
+      element={
+        <ProtectedRoute>
+          <AppLayout>
+            <ApplyToProject />
+          </AppLayout>
+        </ProtectedRoute>
+      }
+    />
+    <Route
       path="/applications"
       element={
         <ProtectedRoute>
           <AppLayout>
             <Applications />
+          </AppLayout>
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/applications/:id"
+      element={
+        <ProtectedRoute>
+          <AppLayout>
+            <ApplicationDetail />
           </AppLayout>
         </ProtectedRoute>
       }

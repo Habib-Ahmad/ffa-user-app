@@ -9,3 +9,6 @@ export { projectsApi } from "./projects";
 
 export * from "./applications";
 export { applicationsApi } from "./applications";
+
+export * from "./messages";
+export { messagesApi } from "./messages";

@@ -44,6 +44,10 @@ export const projectsApi = {
     const response = await apiClient.get<{ data: ProjectsResponse }>(
       `${API_URLS.PROJECTS.LIST}?page=${page}&size=${size}`
     );
+    const filteredResponse = response.data.data.content.filter(
+      (project) => project.status === "PUBLISHED"
+    );
+    response.data.data.content = filteredResponse;
     return response.data.data;
   },
 

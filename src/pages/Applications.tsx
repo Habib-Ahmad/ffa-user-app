@@ -87,14 +87,6 @@ export default function Applications() {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -135,8 +127,9 @@ export default function Applications() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1 flex-1">
                     <div className="flex items-center gap-2">
-                      <CardTitle className="text-xl">
-                        {application.title}
+                      <CardTitle className="text-lg">
+                        {application.projectName ||
+                          `Project #${application.projectId}`}
                       </CardTitle>
                       <Badge className={getStatusColor(application.status)}>
                         {t(
@@ -144,11 +137,6 @@ export default function Applications() {
                         ) || application.status}
                       </Badge>
                     </div>
-                    <CardDescription>
-                      {t("applications.project")}:{" "}
-                      {application.projectName ||
-                        `Project #${application.projectId}`}
-                    </CardDescription>
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -171,34 +159,14 @@ export default function Applications() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div>
-                    <p className="text-muted-foreground mb-1">
-                      <Calendar className="h-4 w-4 inline mr-1" />
-                      {t("applications.submittedDate")}
-                    </p>
-                    <p className="font-medium">
-                      {formatDate(application.dateApplication)}
-                    </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4" />
+                    <span>{formatDate(application.dateApplication)}</span>
                   </div>
-                  <div>
-                    <p className="text-muted-foreground mb-1">Budget</p>
-                    <p className="font-medium">
-                      {formatCurrency(application.budget)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground mb-1">Start Date</p>
-                    <p className="font-medium">
-                      {formatDate(application.startDate)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground mb-1">End Date</p>
-                    <p className="font-medium">
-                      {formatDate(application.endDate)}
-                    </p>
-                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {application.motivation}
+                  </p>
                 </div>
               </CardContent>
             </Card>
