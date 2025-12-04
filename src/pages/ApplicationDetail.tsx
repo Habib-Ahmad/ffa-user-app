@@ -148,10 +148,6 @@ export default function ApplicationDetail() {
                     </span>
                   </div>
                 </div>
-                <Badge className={getStatusColor(application.status)}>
-                  {t(`applications.${application.status.toLowerCase()}`) ||
-                    application.status}
-                </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
