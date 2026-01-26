@@ -60,22 +60,20 @@ export default function ApplicationDetail() {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "draft":
+    switch (status.toUpperCase()) {
+      case "DRAFT":
         return "bg-gray-500";
-      case "submitted":
-        return "bg-blue-500";
-      case "under_review":
-        return "bg-yellow-500";
-      case "shortlisted":
-        return "bg-purple-500";
-      case "awarded":
+      case "APPROVED":
         return "bg-green-500";
-      case "declined":
+      case "REJECTED":
         return "bg-red-500";
       default:
         return "bg-gray-500";
     }
+  };
+
+  const formatStatus = (status: string) => {
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
   };
 
   if (isLoading) {
@@ -120,7 +118,7 @@ export default function ApplicationDetail() {
         <div className="flex-1">
           <h1 className="text-3xl font-bold">Application Details</h1>
         </div>
-        {application.status.toLowerCase() === "draft" && (
+        {application.status.toUpperCase() === "DRAFT" && (
           <Button
             variant="destructive"
             onClick={() => setShowDeleteDialog(true)}
@@ -137,10 +135,15 @@ export default function ApplicationDetail() {
             <CardHeader>
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
-                  <CardTitle className="text-2xl">
-                    {application.projectName ||
-                      `Project #${application.projectId}`}
-                  </CardTitle>
+                  <div className="flex items-center gap-3">
+                    <CardTitle className="text-2xl">
+                      {application.projectName ||
+                        `Project #${application.projectId}`}
+                    </CardTitle>
+                    <Badge className={getStatusColor(application.status)}>
+                      {formatStatus(application.status)}
+                    </Badge>
+                  </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Calendar className="h-4 w-4" />
                     <span>
@@ -174,7 +177,7 @@ export default function ApplicationDetail() {
               >
                 View Project
               </Button>
-              {application.status.toLowerCase() === "draft" && (
+              {application.status.toUpperCase() === "DRAFT" && (
                 <Button
                   variant="destructive"
                   className="w-full"

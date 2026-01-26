@@ -32,7 +32,7 @@ export interface RegisterRequest {
   email: string;
   login: string;
   password: string;
-  organizationId: number;
+  organizationId?: number;
 }
 
 export interface RegisterResponse {

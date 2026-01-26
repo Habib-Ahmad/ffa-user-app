@@ -61,22 +61,20 @@ export default function Applications() {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "draft":
+    switch (status.toUpperCase()) {
+      case "DRAFT":
         return "bg-gray-500";
-      case "submitted":
-        return "bg-blue-500";
-      case "under_review":
-        return "bg-yellow-500";
-      case "shortlisted":
-        return "bg-purple-500";
-      case "awarded":
+      case "APPROVED":
         return "bg-green-500";
-      case "declined":
+      case "REJECTED":
         return "bg-red-500";
       default:
         return "bg-gray-500";
     }
+  };
+
+  const formatStatus = (status: string) => {
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
   };
 
   const formatDate = (dateString: string) => {
@@ -126,10 +124,15 @@ export default function Applications() {
               <CardHeader>
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1 flex-1">
-                    <CardTitle className="text-lg">
-                      {application.projectName ||
-                        `Project #${application.projectId}`}
-                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-lg">
+                        {application.projectName ||
+                          `Project #${application.projectId}`}
+                      </CardTitle>
+                      <Badge className={getStatusColor(application.status)}>
+                        {formatStatus(application.status)}
+                      </Badge>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
