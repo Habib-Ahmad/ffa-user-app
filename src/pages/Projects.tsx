@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, DollarSign, FolderOpen, Search } from "lucide-react";
+import { FolderOpen, Search } from "lucide-react";
 import { projectsApi, Project } from "@/api";
 import { toast } from "sonner";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -151,15 +151,11 @@ export default function Projects() {
               </CardHeader>
               <CardContent className="flex-1">
                 <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <DollarSign className="h-4 w-4" />
-                    <span>{formatCurrency(project.totalBudget)}</span>
+                  <div className="text-muted-foreground">
+                    Budget: {formatCurrency(project.totalBudget)}
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>
-                      Start: {formatDate(project.startDate, "MMM dd, yyyy")}
-                    </span>
+                  <div className="text-muted-foreground">
+                    Start: {formatDate(project.startDate, "MMM dd, yyyy")}
                   </div>
                   {project.location && (
                     <div className="text-muted-foreground">

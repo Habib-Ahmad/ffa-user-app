@@ -66,7 +66,7 @@ export default function ApplyToProject() {
   }, [loadProjectAndCheck]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -106,7 +106,7 @@ export default function ApplyToProject() {
         {
           projectId: parseInt(id),
           motivation: formData.motivation,
-        }
+        },
       );
 
       toast.success("Application submitted successfully!");
@@ -185,7 +185,7 @@ export default function ApplyToProject() {
                 </div>
 
                 <div className="flex gap-4">
-                  <Button
+                  {/* <Button
                     type="button"
                     variant="outline"
                     onClick={handleSaveDraft}
@@ -193,8 +193,12 @@ export default function ApplyToProject() {
                   >
                     <Save className="h-4 w-4 mr-2" />
                     {isSaving ? "Saving..." : "Save Draft"}
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting || isSaving}>
+                  </Button> */}
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || isSaving}
+                    className="ml-auto"
+                  >
                     <Send className="h-4 w-4 mr-2" />
                     {isSubmitting ? "Submitting..." : "Submit Application"}
                   </Button>

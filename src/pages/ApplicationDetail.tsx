@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +18,7 @@ import {
 import { ArrowLeft, Calendar, Trash2, FileText } from "lucide-react";
 import { applicationsApi, Application } from "@/api";
 import { toast } from "sonner";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 export default function ApplicationDetail() {
   const { id } = useParams<{ id: string }>();

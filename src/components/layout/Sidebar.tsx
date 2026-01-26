@@ -1,7 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
-import { Home, FolderOpen, FileText, MessageSquare } from "lucide-react";
+import { Home, FolderOpen, FileText } from "lucide-react";
 
 interface SidebarProps {
   className?: string;
@@ -19,12 +19,6 @@ export function Sidebar({ className }: SidebarProps) {
       label: t("nav.myApplications"),
       end: false,
     },
-    {
-      to: "/messages",
-      icon: MessageSquare,
-      label: t("nav.messages"),
-      end: false,
-    },
   ];
 
   return (
@@ -40,7 +34,7 @@ export function Sidebar({ className }: SidebarProps) {
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
                 isActive
                   ? "bg-primary text-primary-foreground font-medium"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )
             }
           >
