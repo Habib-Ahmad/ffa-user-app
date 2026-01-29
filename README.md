@@ -1,220 +1,290 @@
-# React + TypeScript App Foundation
+# FFA User Application
 
-A modern, production-ready foundation for building React applications with TypeScript, Tailwind CSS, and shadcn/ui components.
+A modern, fully-featured React TypeScript application for the FFA (French Alumni Association) platform. This is the user-facing frontend application that enables users to browse projects, submit applications, and manage their profile within the FFA ecosystem.
 
-## 🎯 What's Included
+## Table of Contents
 
-This is a **bare minimum foundation** designed to be shared across multiple applications. It includes:
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Available Scripts](#available-scripts)
+- [API Integration](#api-integration)
+- [Authentication](#authentication)
+- [Internationalization](#internationalization)
+- [Theming](#theming)
+- [Development Guidelines](#development-guidelines)
+- [Build & Deployment](#build--deployment)
 
-### Core Features
+## Overview
 
-- ✅ **Theme System**: Light/Dark mode with smooth transitions
-- ✅ **Internationalization**: Multi-language support (EN/FR) - easily extensible
-- ✅ **Component Library**: Full shadcn/ui component system (40+ components)
-- ✅ **Routing**: React Router v6 with layout system
-- ✅ **API Structure**: Organized API layer with Axios and TanStack Query
-- ✅ **Form Handling**: Formik + Yup and React Hook Form + Zod
-- ✅ **Styling**: Tailwind CSS with custom design system
-- ✅ **Type Safety**: Full TypeScript support
+A comprehensive web platform for browsing FFA projects, submitting applications, managing submissions, and communicating with coordinators. Features include multi-language support (EN/FR), light/dark theme, and JWT-based authentication.
 
-### Project Structure
+## Features
+
+- JWT Authentication with login/register
+- Multi-language (EN/FR) and theme support (light/dark)
+- 40+ shadcn/ui components with Tailwind CSS
+- React Router v6 with route guards
+- TanStack Query for server state management
+- Axios with interceptors and error handling
+- Dual form validation (Formik + Yup / React Hook Form + Zod)
+- Toast notifications and charts (Recharts)
+- Full TypeScript support
+
+## Tech Stack
+
+### Frontend Framework
+
+- React 18.3.1 - UI library
+- TypeScript 5.8.3 - Type safety
+- Vite 5.4.19 - Build tool and dev server
+- React Router 6.30.1 - Client-side routing
+
+### UI & Styling
+
+- Tailwind CSS 3.4.17 - Utility-first CSS framework
+- shadcn/ui - 40+ unstyled, accessible components
+- Radix UI - Underlying primitive components
+- Lucide React 462 icons - Consistent icon library
+- Next Themes 0.3.0 - Theme management
+
+### State Management & Data
+
+- TanStack Query 5.83.0 - Server state management
+- Axios 1.13.2 - HTTP client
+- Formik 2.4.8 - Form state management
+- React Hook Form 7.61.1 - Performant form handling
+
+### Form Validation
+
+- Yup 1.7.1 - Schema validation
+- Zod 3.25.76 - TypeScript-first schema validation
+
+### Utilities
+
+- date-fns 3.6.0 - Date utilities
+- clsx/tailwind-merge 2.6.0 - Conditional class names
+- recharts 2.15.4 - Charts and graphs
+- sonner 1.7.4 - Toast notifications
+- vaul 0.9.9 - Drawer animations
+- embla-carousel 8.6.0 - Carousel component
+
+### Development Tools
+
+- ESLint 9.32.0 - Code linting
+- PostCSS 8.5.6 - CSS processing
+- Autoprefixer 10.4.21 - CSS vendor prefixes
+
+## Project Structure
 
 ```
-src/
-├── api/              # API configuration and endpoints
-│   ├── config.ts     # Axios instance and interceptors
-│   ├── urls.ts       # API URL constants
-│   └── index.ts      # Export all API functions
-├── components/
-│   ├── layout/       # Layout components (Header, Sidebar, AppLayout)
-│   └── ui/           # shadcn/ui components (40+ components)
-├── contexts/         # React contexts
-│   ├── ThemeContext.tsx      # Light/Dark theme management
-│   └── LanguageContext.tsx   # i18n support
-├── hooks/            # Custom React hooks
-├── interfaces/       # TypeScript interfaces
-├── lib/
-│   ├── i18n.ts      # Translation definitions
-│   └── utils.ts     # Utility functions (cn, etc.)
-└── pages/           # Application pages
-    └── Home.tsx     # Example home page
+ffa-user-app/
+├── public/                      # Static assets
+│   └── robots.txt
+├── src/
+│   ├── api/                     # API integration layer
+│   │   ├── config.ts           # Axios instance with interceptors
+│   │   ├── urls.ts             # API endpoint constants
+│   │   ├── auth.ts             # Authentication API calls
+│   │   ├── applications.ts      # Applications API calls
+│   │   ├── projects.ts          # Projects API calls
+│   │   ├── messages.ts          # Messages API calls
+│   │   └── index.ts             # API exports
+│   │
+│   ├── components/              # React components
+│   │   ├── layout/
+│   │   │   ├── AppLayout.tsx    # Main app layout wrapper
+│   │   │   ├── Header.tsx       # Top header component
+│   │   │   └── Sidebar.tsx      # Navigation sidebar
+│   │   └── ui/                  # shadcn/ui components (40+)
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── dialog.tsx
+│   │       ├── form.tsx
+│   │       └── ... (40+ more)
+│   │
+│   ├── contexts/                # React Context for state management
+│   │   ├── AuthContext.tsx      # Authentication state
+│   │   ├── ThemeContext.tsx     # Light/Dark theme state
+│   │   └── LanguageContext.tsx  # i18n language state
+│   │
+│   ├── hooks/                   # Custom React hooks
+│   │   ├── use-mobile.tsx       # Mobile detection hook
+│   │   └── use-toast.ts         # Toast notification hook
+│   │
+│   ├── interfaces/              # TypeScript interfaces
+│   │   └── index.ts             # User, Institution, Location types
+│   │
+│   ├── lib/                     # Utility functions and configs
+│   │   ├── i18n.ts             # Translation strings (EN/FR)
+│   │   └── utils.ts             # Helper functions (cn, classname utils)
+│   │
+│   ├── pages/                   # Application pages/screens
+│   │   ├── Home.tsx             # Home page
+│   │   ├── Projects.tsx         # Projects listing page
+│   │   ├── ProjectDetail.tsx    # Individual project details
+│   │   ├── ApplyToProject.tsx   # Project application form
+│   │   ├── Applications.tsx     # User applications listing
+│   │   ├── ApplicationDetail.tsx # Individual application details
+│   │   ├── Messages.tsx         # Messaging interface
+│   │   ├── Index.tsx            # Index/landing page
+│   │   └── auth/                # Authentication pages
+│   │       ├── Login.tsx        # Login page
+│   │       └── Register.tsx     # Registration page
+│   │
+│   ├── router/                  # Routing configuration
+│   ├── App.tsx                  # Main app component with routing
+│   ├── main.tsx                 # React DOM render entry point
+│   ├── App.css                  # Global app styles
+│   └── index.css                # Global CSS
+│
+├── components.json              # shadcn/ui configuration
+├── eslint.config.js             # ESLint configuration
+├── vite.config.ts               # Vite configuration
+├── tsconfig.json                # TypeScript base configuration
+├── tsconfig.app.json            # TypeScript app configuration
+├── tsconfig.node.json           # TypeScript Node configuration
+├── tailwind.config.ts           # Tailwind CSS configuration
+├── postcss.config.js            # PostCSS configuration
+├── index.html                   # HTML entry point
+├── package.json                 # Dependencies and scripts
+└── README.md                    # This file
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- Package manager: npm, yarn, pnpm, or bun
+- Node.js 18.0 or higher
+- npm 9+
+- Git
 
 ### Installation
 
 ```bash
-# Install dependencies
+git clone https://github.com/Habib-Ahmad/ffa-user-app.git
+cd ffa-user-app
 npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
 ```
 
-## 🎨 Customization Guide
-
-### 1. Update Branding
-
-Edit `src/components/layout/Header.tsx`:
-
-```tsx
-<span className="font-semibold text-lg">Your App Name</span>
-```
-
-### 2. Configure Navigation
-
-Edit `src/components/layout/Sidebar.tsx` to add your routes:
-
-```tsx
-const links = [
-  { to: "/", icon: Home, label: t("nav.home"), end: true },
-  { to: "/your-route", icon: YourIcon, label: "Your Label" },
-];
-```
-
-### 3. Add Translations
-
-Edit `src/lib/i18n.ts` to add your app-specific translations:
-
-```tsx
-export const translations = {
-  en: {
-    common: {
-      /* ... */
-    },
-    yourFeature: {
-      title: "Your Feature",
-      // ...
-    },
-  },
-  fr: {
-    /* ... */
-  },
-};
-```
-
-### 4. Add Pages
-
-Create new pages in `src/pages/` and update routing in `src/App.tsx`:
-
-```tsx
-<Route
-  path="/your-page"
-  element={
-    <AppLayout>
-      <YourPage />
-    </AppLayout>
-  }
-/>
-```
-
-### 5. API Configuration
-
-Configure your API base URL in `src/api/config.ts`:
-
-```tsx
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-});
-```
-
-Create `.env` file:
-
-```bash
-VITE_API_BASE_URL=https://your-api.com/api
-```
-
-### 6. Add API Endpoints
-
-Add your API functions in `src/api/`:
-
-```tsx
-// src/api/users.ts
-export const getUsers = () => api.get("/users");
-export const createUser = (data: User) => api.post("/users", data);
-```
-
-## 🎯 Available Components
-
-The project includes the full shadcn/ui component library:
-
-- Forms: Input, Textarea, Select, Checkbox, Radio, Switch, etc.
-- Data Display: Table, Card, Badge, Avatar, etc.
-- Feedback: Alert, Toast, Dialog, Sheet, etc.
-- Navigation: Tabs, Breadcrumb, Pagination, etc.
-- Layout: Separator, Scroll Area, Resizable, etc.
-- And many more...
-
-See `src/components/ui/` for all available components.
-
-## 🔧 Tech Stack
-
-- **Framework**: React 18
-- **Language**: TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS
-- **Components**: shadcn/ui (Radix UI primitives)
-- **Routing**: React Router v6
-- **State Management**: TanStack Query
-- **Forms**: Formik + Yup, React Hook Form + Zod
-- **HTTP Client**: Axios
-- **Icons**: Lucide React
-
-## 📦 Key Dependencies
-
-- `react` & `react-dom`: UI library
-- `react-router-dom`: Routing
-- `@tanstack/react-query`: Server state management
-- `axios`: HTTP client
-- `tailwindcss`: Utility-first CSS
-- `@radix-ui/*`: Accessible component primitives
-- `lucide-react`: Icon library
-- `formik` & `yup`: Form handling & validation
-- `react-hook-form` & `zod`: Alternative form handling
-
-## 🌐 Environment Variables
-
-Create a `.env` file in the root directory:
+Create `.env.local`:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000/api
+VITE_API_BASE_URL=http://localhost:8080/ffaAPI
 ```
 
-## 📝 Scripts
+Start development server:
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run build:dev` - Build in development mode
-- `npm run preview` - Preview production build
-- `npm run lint` - Lint code with ESLint
+```bash
+npm run dev
+```
 
-## 🤝 Usage Across Multiple Apps
+Application runs at http://localhost:8080
 
-This foundation is designed to be cloned and customized for different applications:
+## Available Scripts
 
-1. Clone this repository
-2. Remove the `.git` folder to start fresh
-3. Update `package.json` name and version
-4. Customize branding, colors, and features
-5. Add your application-specific pages and logic
-6. Keep the core infrastructure (theme, i18n, components)
+| Command           | Description                                     |
+| ----------------- | ----------------------------------------------- |
+| npm run dev       | Start development server with hot module reload |
+| npm run build     | Build for production (optimized bundle)         |
+| npm run build:dev | Build for development environment               |
+| npm run lint      | Run ESLint to check code quality                |
+| npm run preview   | Preview the production build locally            |
 
-## 📄 License
+## API Integration
 
-This is a foundation template - use it however you like for your projects.
+API client configured in `src/api/config.ts`:
 
----
+- Base URL: `VITE_API_BASE_URL` (env variable)
+- Auth: Bearer token injection from localStorage
+- Timeout: 30 seconds
+- Errors: Auto toast notifications
+- Session: Auto-redirect to login on 401
 
-**Built with ❤️ for rapid application development**
+API modules in `src/api/`:
+
+- auth.ts - Authentication
+- projects.ts - Projects
+- applications.ts - Applications
+- messages.ts - Messaging
+- config.ts - Axios configuration
+
+## Authentication
+
+**Flow:**
+
+1. Register at `/register` with name, email, username, password
+2. Login at `/login` with email/password
+3. JWT tokens (accessToken, refreshToken) stored in localStorage
+
+**Protected Routes:**
+
+- ProtectedRoute: Auth required; redirects to /login if not authenticated
+- PublicRoute: Auth users redirected to /
+- Tokens auto-included in API requests via interceptors
+
+## Internationalization
+
+Supported languages: English (en), French (fr)
+
+Translations in `src/lib/i18n.ts`. Access via:
+
+```tsx
+const { t } = useLanguage();
+<button>{t("common.submit")}</button>;
+```
+
+Add translations to both en/fr objects in i18n.ts and reference via dot notation.
+
+## Theming
+
+Light/dark mode support with next-themes library.
+
+```tsx
+const { theme, setTheme } = useTheme();
+setTheme(theme === "dark" ? "light" : "dark");
+```
+
+Theme colors use CSS variables in `src/index.css` referenced in `tailwind.config.ts`.
+
+## Development Guidelines
+
+**Code Organization:**
+
+- `src/components/` - Reusable UI components
+- `src/pages/` - Full-page views
+- `src/contexts/` - Global state
+- `src/hooks/` - Custom hooks
+- `src/api/` - Backend integration
+- `src/lib/` - Utilities
+
+**Naming:**
+
+- Components: PascalCase (Button.tsx)
+- Hooks: camelCase with use prefix (useToast.ts)
+- Pages: PascalCase (HomePage.tsx)
+
+**TypeScript:**
+
+- Interfaces in `src/interfaces/index.ts`
+- Use strict typing; avoid any
+- Type component props explicitly
+- Use type for aliases, interface for objects
+
+**Forms:**
+Choose React Hook Form + Zod or Formik + Yup. Both have resolvers configured in the project.
+
+**Styling:**
+Use Tailwind CSS utility classes. Global styles in `src/index.css`. Use `cn()` utility from `src/lib/utils.ts` for conditional classes.
+
+## Build & Deployment
+
+```bash
+npm run build          # Production build
+npm run build:dev      # Development build
+npm run preview        # Preview production build
+```
+
+Output in `dist/` folder with minified, tree-shaken code.
